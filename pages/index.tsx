@@ -7,6 +7,7 @@ import {
   useMetadata,
   Web3Button,
 } from "@thirdweb-dev/react";
+import dotenv from "dotenv";
 import { NextPage } from "next";
 import {
   Box,
@@ -17,10 +18,11 @@ import {
   Skeleton,
   Text,
 } from "@chakra-ui/react";
+dotenv.config();
 
 const Home: NextPage = () => {
   const address = useAddress();
-  const contractAddress = "0x55DE90e94B1F5809ef9567b8ca5f70B2C3343248";
+  const contractAddress = process.env.CONTRACT_ADDRESS as string;
   const { contract } = useContract(contractAddress);
   const { data: metadata, isLoading: isLoadingMetadata } =
     useMetadata(contract);
@@ -54,9 +56,12 @@ const Home: NextPage = () => {
               <p>Total Minted: {totalMinted?.toNumber()}/5</p>
             </Skeleton>
             {address ? (
-              <Web3Button contractAddress={contractAddress}
-              action={(contract) =>contract.erc721.claim(1)}
-              >Claim</Web3Button>
+              <Web3Button
+                contractAddress={contractAddress}
+                action={(contract) => contract.erc721.claim(1)}
+              >
+                Claim
+              </Web3Button>
             ) : (
               <p>Please connect your wallet</p>
             )}
